@@ -113,6 +113,47 @@
           style="display:block"
           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
           data-ad-slot="2222222222"
+
+    
+    <div class="game-header w-full flex justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-6 shadow-lg">
+      <div class="flex gap-4">
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5">
+          <div class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Score</div>
+          <div id="score" class="text-xl font-bold text-cyan-400 font-heading leading-tight">0</div>
+        </div>
+        <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5">
+          <div class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Best</div>
+          <div id="bestScore" class="text-xl font-bold text-purple-400 font-heading leading-tight">0</div>
+        </div>
+      </div>
+      <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">New Game</button></div>    <div class="w-full flex justify-center mb-6 mt-4"><canvas id="gameCanvas_74" width="800" height="500" class="w-full max-w-full bg-[#131a26] rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.5)] border border-white/10 touch-none select-none block"></canvas>
+    </div>
+
+    <p class="text-center text-gray-300 mt-2 font-medium text-lg px-4">
+      Click and hold to attach a rope constraint and swing around the pivot.
+    </p>
+  </div>
+
+  
+      <div class="adsense-side-rail hidden lg:flex bg-nexus-elevated border border-white/5 rounded-xl items-center justify-center text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden" style="min-width: 160px; min-height: 600px; margin-left: 1rem; position: sticky; top: 100px;">
+
+     <ins class="adsbygoogle"
+          style="display:inline-block;width:160px;height:600px"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="1111111111"></ins>
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+</div>
+
+
+
+  <div class="max-w-[820px] mx-auto w-full px-4 mb-8 mt-auto">
+    <div class="ad-slot ad-slot-in-article bg-nexus-elevated border border-white/5 rounded-xl flex items-center justify-center min-h-[90px] text-gray-500 text-xs tracking-widest uppercase relative overflow-hidden">
+
+     <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+          data-ad-slot="2222222222"
           data-ad-format="auto"
           data-full-width-responsive="true"></ins>
      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
@@ -125,71 +166,138 @@
         const ctx = canvas.getContext('2d');
         const restartBtn = document.getElementById('restartBtn') || { addEventListener: () => {} };
 
-        let px, py, vx, vy, score, isOver, anchors, activeAnchor;
-        let hasStarted = false; // Core State Gate
-        const gravity = 0.22;
+        let px, py, vx, vy, score, isOver, anchors, activeAnchor, camX, ropeLen;
+        let hasStarted = false; 
+        const gravity = 0.35;
 
         function init() {
-            px = 100; py = 200; vx = 3; vy = 0; score = 0; isOver = false; activeAnchor = null; hasStarted = false;
-            anchors = [{x: 250, y: 100}, {x: 450, y: 80}, {x: 650, y: 110}, {x: 850, y: 90}];
+            px = 200; py = 200; vx = 5; vy = 0; score = 0; isOver = false; activeAnchor = null; hasStarted = false; camX = 0;
+            anchors = [];
+            for (let i = 0; i < 6; i++) {
+                anchors.push({x: 350 + i * 220 + (Math.random()*80 - 40), y: 40 + Math.random()*120});
+            }
             updateScore();
         }
+        
         function updateScore() {
             const scoreNode = document.querySelector('[id*="score"]') || { textContent: "" };
-            scoreNode.textContent = score;
+            scoreNode.textContent = Math.floor(score);
         }
+        
         function loop() {
             if (!hasStarted) {
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-                anchors.forEach(a => { ctx.fillStyle='#e2e8f0'; ctx.beginPath(); ctx.arc(a.x, a.y, 8, 0, Math.PI*2); ctx.fill(); });
-                ctx.fillStyle = '#a855f7'; ctx.fillRect(px - 12, py - 12, 24, 24);
+                anchors.forEach(a => { ctx.fillStyle='#e2e8f0'; ctx.beginPath(); ctx.arc(a.x - camX, a.y, 8, 0, Math.PI*2); ctx.fill(); });
+                ctx.fillStyle = '#a855f7'; ctx.fillRect(px - camX - 12, py - 12, 24, 24);
                 
-                // Interstitial Ready Menu Text
                 ctx.fillStyle = 'rgba(15, 23, 42, 0.75)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 28px sans-serif'; ctx.textAlign = 'center';
                 ctx.fillText('JO JO RUN', canvas.width/2, canvas.height/2 - 20);
                 ctx.fillStyle = '#ffffff'; ctx.font = '16px sans-serif';
-                ctx.fillText('TAP / CLICK SCREEN TO SWING FORWARD', canvas.width/2, canvas.height/2 + 15);
+                ctx.fillText('CLICK AND HOLD TO SWING', canvas.width/2, canvas.height/2 + 15);
                 requestAnimationFrame(loop);
                 return;
             }
-            if (isOver) { ctx.fillStyle='rgba(15,23,42,0.85)'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#f43f5e'; ctx.font='bold 32px sans-serif'; ctx.textAlign='center'; ctx.fillText('CRASH GAME OVER', canvas.width/2, canvas.height/2); return; }
+            if (isOver) { 
+                ctx.fillStyle='rgba(15,23,42,0.85)'; ctx.fillRect(0,0,canvas.width,canvas.height); 
+                ctx.fillStyle='#f43f5e'; ctx.font='bold 36px sans-serif'; ctx.textAlign='center'; 
+                ctx.fillText('CRASH - GAME OVER', canvas.width/2, canvas.height/2); 
+                return; 
+            }
             ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Update Physics
+            vy += gravity;
 
             if (activeAnchor) {
                 let dx = px - activeAnchor.x, dy = py - activeAnchor.y;
                 let dist = Math.hypot(dx, dy);
-                let ropeLen = 160;
                 if (dist > ropeLen) {
-                    let ax = (dx / dist) * 0.45, ay = (dy / dist) * 0.45;
-                    vx -= ax; vy -= ay;
+                    // Rigid rope constraint projection
+                    px = activeAnchor.x + (dx / dist) * ropeLen;
+                    py = activeAnchor.y + (dy / dist) * ropeLen;
+                    
+                    let nx = dx / dist, ny = dy / dist;
+                    let dot = vx * nx + vy * ny;
+                    if (dot > 0) { // Only remove outward velocity
+                        vx -= dot * nx;
+                        vy -= dot * ny;
+                    }
                 }
-                ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(activeAnchor.x, activeAnchor.y); ctx.lineTo(px, py); ctx.stroke();
-            } else { vy += gravity; }
+                // Draw Rope
+                ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 3; ctx.beginPath(); 
+                ctx.moveTo(activeAnchor.x - camX, activeAnchor.y); 
+                ctx.lineTo(px - camX, py); ctx.stroke();
+            }
 
-            px += vx; py += vy; vx *= 0.995;
-            if(px > canvas.width - 200) { px = 100; score += 5; updateScore(); anchors.forEach(a => a.x = Math.random()*500 + 200); }
-            anchors.forEach(a => { ctx.fillStyle='#e2e8f0'; ctx.beginPath(); ctx.arc(a.x, a.y, 8, 0, Math.PI*2); ctx.fill(); });
-            ctx.fillStyle = '#a855f7'; ctx.fillRect(px - 12, py - 12, 24, 24);
+            px += vx; py += vy; 
+            vx *= 0.998; vy *= 0.998; // Air resistance
+            
+            // Limit minimum forward speed to keep game flowing
+            if (vx < 3 && !activeAnchor) vx = 3; 
+            if (vx > 18) vx = 18;
 
-            if (py > canvas.height || py < 0 || px < 0) isOver = true;
+            // Camera follow logic
+            let targetCamX = px - 250;
+            if (targetCamX > camX) camX = targetCamX;
+
+            // Update Score
+            let distanceScore = (px - 200) / 100;
+            if (distanceScore > score) {
+                score = distanceScore;
+                updateScore();
+            }
+
+            // Procedurally recycle anchors
+            anchors.forEach(a => {
+                if (a.x < camX - 100) {
+                    a.x += 1300;
+                    a.y = 40 + Math.random()*120;
+                }
+            });
+
+            // Draw Anchors
+            anchors.forEach(a => { 
+                ctx.fillStyle='#e2e8f0'; ctx.beginPath(); ctx.arc(a.x - camX, a.y, 8, 0, Math.PI*2); ctx.fill(); 
+                if (a === activeAnchor) {
+                    ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(a.x - camX, a.y, 14, 0, Math.PI*2); ctx.stroke();
+                }
+            });
+
+            // Draw Player (with velocity trail effect)
+            ctx.fillStyle = 'rgba(168, 85, 247, 0.4)'; 
+            ctx.fillRect(px - camX - 12 - vx, py - 12 - vy, 24, 24);
+            ctx.fillStyle = '#a855f7'; 
+            ctx.fillRect(px - camX - 12, py - 12, 24, 24);
+
+            // Game Over bounds (Fall off or drop behind camera)
+            if (py > canvas.height + 50 || py < -1000 || px - camX < -50) {
+                isOver = true;
+            }
+            
             requestAnimationFrame(loop);
         }
-        canvas.addEventListener('mousedown', () => {
+        
+        function attachRope() {
             if (!hasStarted) { hasStarted = true; return; }
             let closest = null, minDist = 9999;
-            anchors.forEach(a => { let d = Math.hypot(px - a.x, py - a.y); if(d < minDist) { minDist = d; closest = a; } });
-            if(minDist < 250) activeAnchor = closest;
-        });
+            // Find the best anchor in front of the player
+            anchors.forEach(a => { 
+                let d = Math.hypot(px - a.x, py - a.y); 
+                // Must be slightly ahead and within reach
+                if(a.x > px - 50 && d < minDist && d < 450) { minDist = d; closest = a; } 
+            });
+            if (closest) {
+                activeAnchor = closest;
+                ropeLen = minDist;
+            }
+        }
+        
+        canvas.addEventListener('mousedown', attachRope);
         canvas.addEventListener('mouseup', () => activeAnchor = null);
-        canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            if (!hasStarted) { hasStarted = true; return; }
-            let closest = null, minDist = 9999;
-            anchors.forEach(a => { let d = Math.hypot(px - a.x, py - a.y); if(d < minDist) { minDist = d; closest = a; } });
-            if(minDist < 250) activeAnchor = closest;
-        }, {passive: false});
+        canvas.addEventListener('touchstart', (e) => { e.preventDefault(); attachRope(); }, {passive: false});
         canvas.addEventListener('touchend', (e) => { e.preventDefault(); activeAnchor = null; }, {passive: false});
+        
         restartBtn.addEventListener('click', () => { init(); });
         init(); loop();
     
