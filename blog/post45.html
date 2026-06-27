@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -89,7 +89,7 @@
 
         <h2 class="text-3xl font-bold font-heading text-white mt-12 mb-6">Vertical Layering</h2>
 
-        <p>The most common form of adaptive audio is Vertical Layering. Instead of asking your composer for one massive stereo mix of a song, you ask them to export the song as individual "stems" (separate tracks for drums, bass, strings, and synth). Crucially, every stem must be exactly the same length and tempo.</p>
+        <p>The most common form of adaptive audio is Vertical Layering. Instead of asking your composer for one massive stereo mix of a song, you ask them to export the song as individual "stems" (separate tracks for drums, bass, strings, and synth). Importantly, every stem must be exactly the same length and tempo.</p>
 
         <p>In your JavaScript engine, you load all four stems simultaneously into separate <code>AudioBufferSourceNodes</code> and start playing them at the exact same millisecond. However, you attach a <code>GainNode</code> (a volume control) to each stem before routing it to the final output. </p>
 
