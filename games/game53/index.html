@@ -121,54 +121,113 @@
 
   <script>
 
-        // --- GAME 53: SIDE BY SIDE ---
+        // --- GAME 53: SIDE BY SIDE (UX OVERHAUL) ---
         const canvas = document.getElementById('gameCanvas_53'); const ctx = canvas.getContext('2d');
         
-    const restartBtn = document.getElementById('restartBtn') || { addEventListener: () => {} };
-    function updateScoreUI(score) {
-        const scoreNode = document.getElementById('score') || document.querySelector('[id*="score"]');
-        if (scoreNode) scoreNode.textContent = score;
-        const bestNode = document.getElementById('bestScore') || document.querySelector('[id*="bestScore"]');
-        if (bestNode && Number(score) > Number(bestNode.textContent)) bestNode.textContent = score;
-    }
-
-        let score, isOver, obstacles, p1x, p2x;
-        function init() {
-            score = 0; isOver = false; obstacles = []; p1x = canvas.width/4; p2x = canvas.width*0.75;
-            updateScoreUI(score); loop();
+        const restartBtn = document.getElementById('restartBtn') || { addEventListener: () => {} };
+        function updateScoreUI(score) {
+            const scoreNode = document.getElementById('score') || document.querySelector('[id*="score"]');
+            if (scoreNode) scoreNode.textContent = Math.floor(score);
+            const bestNode = document.getElementById('bestScore') || document.querySelector('[id*="bestScore"]');
+            if (bestNode && Math.floor(score) > Number(bestNode.textContent)) bestNode.textContent = Math.floor(score);
         }
+
+        let score, isOver, obstacles;
+        // Lanes: Left (0: 100, 1: 300), Right (0: 500, 1: 700)
+        let leftLane, rightLane; 
+        let p1x, p2x; // Actual smooth X positions
+
+        function init() {
+            score = 0; isOver = false; obstacles = []; 
+            leftLane = 0; rightLane = 1;
+            p1x = 100; p2x = 700;
+            updateScoreUI(score); 
+            loop();
+        }
+
         function loop() {
             if(isOver) {
                 ctx.fillStyle = 'rgba(15,23,42,0.85)'; ctx.fillRect(0,0,canvas.width,canvas.height);
                 ctx.fillStyle = '#ef4444'; ctx.font = 'bold 36px sans-serif'; ctx.textAlign='center'; ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2);
                 return;
             }
-            ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.strokeStyle = '#334155'; ctx.beginPath(); ctx.moveTo(canvas.width/2, 0); ctx.lineTo(canvas.width/2, canvas.height); ctx.stroke();
             
-            if(Math.random() < 0.04 * (1 + score * 0.02)) {
-                let side = Math.random()>0.5 ? 0 : 1;
-                obstacles.push({ x: side === 0 ? canvas.width/4 : canvas.width*0.75, y: -40, w: 60, h: 40 });
+            ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,canvas.width,canvas.height);
+            // Draw center divider
+            ctx.strokeStyle = '#334155'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(canvas.width/2, 0); ctx.lineTo(canvas.width/2, canvas.height); ctx.stroke();
+            // Draw lane dividers
+            ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 2; 
+            ctx.beginPath(); ctx.moveTo(200, 0); ctx.lineTo(200, canvas.height); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(600, 0); ctx.lineTo(600, canvas.height); ctx.stroke();
+            
+            // Smooth LERP player movement
+            const targetP1 = leftLane === 0 ? 100 : 300;
+            const targetP2 = rightLane === 0 ? 500 : 700;
+            p1x += (targetP1 - p1x) * 0.25;
+            p2x += (targetP2 - p2x) * 0.25;
+
+            // Spawn obstacles
+            if(Math.random() < 0.035 * (1 + score * 0.015)) {
+                const lanes = [100, 300, 500, 700];
+                const spawnX = lanes[Math.floor(Math.random() * 4)];
+                // Prevent spawning too close to another obstacle in the same lane
+                if(!obstacles.some(o => o.x === spawnX && o.y < 150)) {
+                    obstacles.push({ x: spawnX, y: -40, w: 60, h: 60 });
+                }
             }
             
-            ctx.shadowBlur = 15; ctx.shadowColor = '#38bdf8'; ctx.fillStyle='#38bdf8'; ctx.fillRect(p1x-20, canvas.height-60, 40, 40);
-            ctx.shadowColor = '#a855f7'; ctx.fillStyle='#a855f7'; ctx.fillRect(p2x-20, canvas.height-60, 40, 40);
+            // Draw Players
+            ctx.shadowBlur = 15; ctx.shadowColor = '#38bdf8'; ctx.fillStyle='#38bdf8'; 
+            ctx.fillRect(p1x-25, canvas.height-80, 50, 50);
+            ctx.shadowColor = '#a855f7'; ctx.fillStyle='#a855f7'; 
+            ctx.fillRect(p2x-25, canvas.height-80, 50, 50);
             ctx.shadowBlur = 0;
             
+            let currentSpeed = 3.5 + Math.log1p(score) * 0.5;
+            
             for(let i=obstacles.length-1; i>=0; i--) {
-                let o = obstacles[i]; o.y += 2.80 * (1 + Math.log1p(score) * 0.15);
-                ctx.fillStyle='#f43f5e'; ctx.fillRect(o.x-o.w/2, o.y, o.w, o.h);
+                let o = obstacles[i]; 
+                o.y += currentSpeed;
+                
+                ctx.fillStyle='#f43f5e'; 
+                ctx.fillRect(o.x-o.w/2, o.y, o.w, o.h);
+                
+                // Collision
                 let checkX = o.x < canvas.width/2 ? p1x : p2x;
-                if(Math.abs(checkX - o.x) < 30 && o.y + o.h > canvas.height-60 && o.y < canvas.height-20) isOver=true;
-                if(o.y > canvas.height) { obstacles.splice(i,1); score+=10; updateScoreUI(score); }
+                if(Math.abs(checkX - o.x) < 40 && o.y + o.h > canvas.height-80 && o.y < canvas.height-30) {
+                    isOver = true;
+                }
+                
+                if(o.y > canvas.height) { 
+                    obstacles.splice(i,1); 
+                    score += 1; 
+                    updateScoreUI(score); 
+                }
             }
             requestAnimationFrame(loop);
         }
+
+        // Universal input handler: Tapping left half swaps left car, right half swaps right car
+        const handleInput = (clientX) => {
+            if(isOver) return;
+            let rect = canvas.getBoundingClientRect();
+            let x = (clientX - rect.left) * (canvas.width / rect.width);
+            if(x < canvas.width/2) {
+                leftLane = leftLane === 0 ? 1 : 0;
+            } else {
+                rightLane = rightLane === 0 ? 1 : 0;
+            }
+        };
+
+        canvas.addEventListener('mousedown', (e) => handleInput(e.clientX));
+        
         window.addEventListener('keydown', e => {
-            if(e.key === 'a' && p1x > 40) p1x -= 60; if(e.key === 'd' && p1x < canvas.width/2 - 40) p1x += 60;
-            if(e.key === 'ArrowLeft' && p2x > canvas.width/2 + 40) p2x -= 60; if(e.key === 'ArrowRight' && p2x < canvas.width - 40) p2x += 60;
+            if(e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') { leftLane = leftLane === 0 ? 1 : 0; }
+            if(e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') { rightLane = rightLane === 0 ? 1 : 0; }
         });
-        restartBtn.addEventListener('click', init); init();
+        
+        restartBtn.addEventListener('click', init); 
+        init();
     
 
 window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });
