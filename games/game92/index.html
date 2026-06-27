@@ -239,7 +239,7 @@ window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown"
                 audioBtn.textContent = isMuted ? '🔇' : '🔊';
             };
             audioBtn.addEventListener('click', toggleAudio);
-                        audioBtn.addEventListener('touchstart', toggleAudio, {passive: false});
+                        /* removed conflicting touchstart */
             
             // --- DRAG AND DROP INJECTION ---
             let isDragging = false, startX, startY, initX, initY;
