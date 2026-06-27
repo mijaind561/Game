@@ -178,13 +178,20 @@
       if(e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
       if(e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
       if(e.code === 'ArrowUp' || e.code === 'KeyW') keys.up = true;
-      if(e.code === 'Space') { keys.space = true; e.preventDefault(); }
+      if(e.code === 'Space') { 
+        keys.space = true; 
+        e.preventDefault(); 
+        if (gameState === 'PLAYING') shoot(); 
+      }
     });
     window.addEventListener('keyup', e => {
       if(e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
       if(e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
       if(e.code === 'ArrowUp' || e.code === 'KeyW') keys.up = false;
-      if(e.code === 'Space') { keys.space = false; }
+      if(e.code === 'Space') { 
+        keys.space = false; 
+        ship.shootCooldown = 0; // Allow fast mashing
+      }
     });
 
     // Mobile buttons
@@ -193,16 +200,20 @@
       if(!btn) return;
       btn.addEventListener('touchstart', e => { 
         e.preventDefault(); keys[key] = true; 
+        if (key === 'space' && gameState === 'PLAYING') shoot();
       });
       btn.addEventListener('touchend', e => { 
         e.preventDefault(); keys[key] = false; 
+        if(key === 'space') ship.shootCooldown = 0;
       });
       // Add mouse events for testing on desktop
       btn.addEventListener('mousedown', e => { 
         keys[key] = true; 
+        if (key === 'space' && gameState === 'PLAYING') shoot();
       });
       btn.addEventListener('mouseup', e => { 
         keys[key] = false; 
+        if(key === 'space') ship.shootCooldown = 0;
       });
     };
     bindBtn('btnLeft', 'left');
