@@ -379,24 +379,17 @@
 
         const audioBtn = document.getElementById('audioToggleBtn');
         if(audioBtn) {
-            audioBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+            const toggleAudio = (e) => {
+                if(e) { e.preventDefault(); e.stopPropagation(); }
                 if(!audioCtx) initAudioEngine();
+                if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
                 isMuted = !isMuted;
                 if(bgmGain) bgmGain.gain.value = isMuted ? 0 : 0.03;
                 audioBtn.textContent = isMuted ? '🔇' : '🔊';
-            });
-            audioBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if(!audioCtx) initAudioEngine();
-                isMuted = !isMuted;
-                if(bgmGain) bgmGain.gain.value = isMuted ? 0 : 0.03;
-                audioBtn.textContent = isMuted ? '🔇' : '🔊';
-            }, {passive: false});
+            };
+            audioBtn.addEventListener('click', toggleAudio);
+            audioBtn.addEventListener('touchstart', toggleAudio, {passive: false});
         }
-
         // Bind init and SFX to canvas interactions globally
         document.addEventListener('mousedown', (e) => {
             if(!audioCtx && e.target.id !== 'audioToggleBtn') initAudioEngine();

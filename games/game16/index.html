@@ -104,6 +104,7 @@
         <h2 class="text-5xl font-bold font-heading text-white drop-shadow-md mb-2">Game Over</h2>
         <p class="text-gray-200 text-xl mb-6">Score: <span id="finalScore" class="font-bold text-white">0</span></p>
         <button id="restartBtn" class="bg-white text-red-600 px-8 py-3 rounded-full font-bold text-lg shadow-lg transition-transform active:scale-95">Try Again</button>
+        <button id="audioToggleBtn" style="display: inline-block; margin-left: 15px; padding: 12px; background: #1e293b; color: #38bdf8; border: 2px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 20px; line-height: 1; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); transition: all 0.2s; vertical-align: middle;">🔊</button>
       </div>
     </div>
   </div>
@@ -454,24 +455,17 @@
 
         const audioBtn = document.getElementById('audioToggleBtn');
         if(audioBtn) {
-            audioBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+            const toggleAudio = (e) => {
+                if(e) { e.preventDefault(); e.stopPropagation(); }
                 if(!audioCtx) initAudioEngine();
+                if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
                 isMuted = !isMuted;
                 if(bgmGain) bgmGain.gain.value = isMuted ? 0 : 0.03;
                 audioBtn.textContent = isMuted ? '🔇' : '🔊';
-            });
-            audioBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if(!audioCtx) initAudioEngine();
-                isMuted = !isMuted;
-                if(bgmGain) bgmGain.gain.value = isMuted ? 0 : 0.03;
-                audioBtn.textContent = isMuted ? '🔇' : '🔊';
-            }, {passive: false});
+            };
+            audioBtn.addEventListener('click', toggleAudio);
+            audioBtn.addEventListener('touchstart', toggleAudio, {passive: false});
         }
-
         // Bind init and SFX to canvas interactions globally
         document.addEventListener('mousedown', (e) => {
             if(!audioCtx && e.target.id !== 'audioToggleBtn') initAudioEngine();
