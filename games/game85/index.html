@@ -121,43 +121,118 @@
 
   <script>
 
-        // --- GAME 85: 3D CAR RUN ---
+        // --- GAME 85: 3D CAR RUN (UX OVERHAUL) ---
         const canvas = document.getElementById('gameCanvas_85'); const ctx = canvas.getContext('2d');
         
-    const restartBtn = document.getElementById('restartBtn') || { addEventListener: () => {} };
-    function updateScoreUI(score) {
-        const scoreNode = document.getElementById('score') || document.querySelector('[id*="score"]');
-        if (scoreNode) scoreNode.textContent = score;
-        const bestNode = document.getElementById('bestScore') || document.querySelector('[id*="bestScore"]');
-        if (bestNode && Number(score) > Number(bestNode.textContent)) bestNode.textContent = score;
-    }
+        const restartBtn = document.getElementById('restartBtn') || { addEventListener: () => {} };
+        function updateScoreUI(score) {
+            const scoreNode = document.getElementById('score') || document.querySelector('[id*="score"]');
+            if (scoreNode) scoreNode.textContent = Math.floor(score);
+            const bestNode = document.getElementById('bestScore') || document.querySelector('[id*="bestScore"]');
+            if (bestNode && Math.floor(score) > Number(bestNode.textContent)) bestNode.textContent = Math.floor(score);
+        }
 
-        let pos, speed, isOver, score, curves, curveIdx;
-        function init() { pos=0; speed = 7.00; score=0; curves=[0,1,-1,0,2,-2]; curveIdx=0; isOver=false; updateScoreUI(0); loop(); }
+        let pos, speed, isOver, score, curves, curveIdx, steerVelocity;
+        let keys = { left: false, right: false };
+
+        function init() { 
+            pos = 0; speed = 7.00; score = 0; 
+            curves = [0, 1.5, -1.5, 0, 2.5, -2.5, 1, -1]; 
+            curveIdx = 0; isOver = false; steerVelocity = 0;
+            updateScoreUI(0); loop(); 
+        }
+
         function loop() {
-            if(isOver){ ctx.fillStyle='rgba(15,23,42,0.85)'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#ef4444'; ctx.font='bold 36px sans-serif'; ctx.textAlign='center'; ctx.fillText('WRECKED', canvas.width/2, canvas.height/2); return; }
-            ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,canvas.width,canvas.height);
-            
-            let curve = curves[curveIdx]; pos += curve*2;
-            if(Math.random() < 0.01 * (1 + score * 0.02)) curveIdx = (curveIdx+1)%curves.length;
-            
-            for(let i=0; i<30; i++) {
-                let w = (i/30)*canvas.width, y = canvas.height - i*15;
-                ctx.fillStyle = i%2===0 ? '#334155' : '#475569';
-                ctx.fillRect(canvas.width/2 - w/2 - pos*(i/30), y, w, 15);
+            if(isOver){ 
+                ctx.fillStyle='rgba(15,23,42,0.85)'; ctx.fillRect(0,0,canvas.width,canvas.height); 
+                ctx.fillStyle='#ef4444'; ctx.font='bold 36px sans-serif'; ctx.textAlign='center'; 
+                ctx.fillText('WRECKED', canvas.width/2, canvas.height/2); 
+                return; 
             }
             
-            ctx.fillStyle='#facc15'; ctx.fillRect(canvas.width/2 - 30, canvas.height - 80, 60, 40);
-            if(Math.abs(pos) > canvas.width/3) isOver = true;
+            ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,canvas.width,canvas.height);
             
-            score+=1; updateScoreUI(Math.floor(score/10));
+            // Road curvature physics
+            let curve = curves[curveIdx]; 
+            let curveSpeedMultiplier = 1 + (score * 0.0005);
+            pos += curve * 3.5 * curveSpeedMultiplier;
+            
+            // Smooth steering physics
+            if (keys.left) steerVelocity += 1.5;
+            if (keys.right) steerVelocity -= 1.5;
+            steerVelocity *= 0.85; // Friction
+            pos += steerVelocity;
+
+            // Curve generation logic
+            if(Math.random() < 0.015 * (1 + score * 0.01)) {
+                curveIdx = (curveIdx + 1) % curves.length;
+            }
+            
+            // Draw pseudo-3D road
+            for(let i=0; i<30; i++) {
+                let w = (i/30) * canvas.width; 
+                let y = canvas.height - i*15;
+                ctx.fillStyle = i%2===0 ? '#334155' : '#475569';
+                ctx.fillRect(canvas.width/2 - w/2 - pos*(i/30), y, w, 15);
+                
+                // Draw road markings
+                if (i%4 < 2) {
+                    ctx.fillStyle = '#cbd5e1';
+                    ctx.fillRect(canvas.width/2 - 5 - pos*(i/30), y, 10, 15);
+                }
+            }
+            
+            // Draw Car
+            ctx.shadowBlur = 10; ctx.shadowColor = '#facc15';
+            ctx.fillStyle='#facc15'; ctx.fillRect(canvas.width/2 - 35, canvas.height - 90, 70, 50);
+            
+            // Draw tail lights
+            ctx.shadowBlur = 15; ctx.shadowColor = '#ef4444';
+            ctx.fillStyle='#ef4444'; 
+            ctx.fillRect(canvas.width/2 - 30, canvas.height - 60, 15, 10);
+            ctx.fillRect(canvas.width/2 + 15, canvas.height - 60, 15, 10);
+            ctx.shadowBlur = 0;
+
+            // Collision (Off-road)
+            if(Math.abs(pos) > (canvas.width/2.5)) isOver = true;
+            
+            score += 1; 
+            updateScoreUI(Math.floor(score/10));
             requestAnimationFrame(loop);
         }
+
+        // Universal Controls (Keyboard + Touch)
         window.addEventListener('keydown', e => {
-            if(e.key==='ArrowLeft') pos+=15;
-            if(e.key==='ArrowRight') pos-=15;
+            if(e.key==='ArrowLeft' || e.key==='a' || e.key==='A') keys.left = true;
+            if(e.key==='ArrowRight' || e.key==='d' || e.key==='D') keys.right = true;
         });
-        restartBtn.addEventListener('click', init); init();
+        window.addEventListener('keyup', e => {
+            if(e.key==='ArrowLeft' || e.key==='a' || e.key==='A') keys.left = false;
+            if(e.key==='ArrowRight' || e.key==='d' || e.key==='D') keys.right = false;
+        });
+
+        // Touch/Mouse zones
+        const handlePointer = (e, isDown) => {
+            if(isOver) return;
+            const cx = e.touches ? e.touches[0].clientX : e.clientX;
+            const rect = canvas.getBoundingClientRect();
+            const x = (cx - rect.left) * (canvas.width / rect.width);
+            if(isDown) {
+                if(x < canvas.width/2) { keys.left = true; keys.right = false; }
+                else { keys.right = true; keys.left = false; }
+            } else {
+                keys.left = false; keys.right = false;
+            }
+        };
+
+        canvas.addEventListener('mousedown', e => handlePointer(e, true));
+        canvas.addEventListener('mouseup', e => handlePointer(e, false));
+        canvas.addEventListener('mouseleave', e => handlePointer(e, false));
+        canvas.addEventListener('touchstart', e => handlePointer(e, true), {passive: false});
+        canvas.addEventListener('touchend', e => handlePointer(e, false));
+
+        restartBtn.addEventListener('click', init); 
+        init();
     
 
 window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });
