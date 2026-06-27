@@ -184,7 +184,7 @@
       if(e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
       if(e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
       if(e.code === 'ArrowUp' || e.code === 'KeyW') keys.up = false;
-      if(e.code === 'Space') { keys.space = false; ship.canShoot = true; }
+      if(e.code === 'Space') { keys.space = false; }
     });
 
     // Mobile buttons
@@ -193,20 +193,16 @@
       if(!btn) return;
       btn.addEventListener('touchstart', e => { 
         e.preventDefault(); keys[key] = true; 
-        if (key === 'space' && gameState === 'PLAYING') shoot();
       });
       btn.addEventListener('touchend', e => { 
         e.preventDefault(); keys[key] = false; 
-        if(key === 'space') ship.canShoot = true; 
       });
       // Add mouse events for testing on desktop
       btn.addEventListener('mousedown', e => { 
         keys[key] = true; 
-        if (key === 'space' && gameState === 'PLAYING') shoot();
       });
       btn.addEventListener('mouseup', e => { 
         keys[key] = false; 
-        if(key === 'space') ship.canShoot = true; 
       });
     };
     bindBtn('btnLeft', 'left');
@@ -268,7 +264,7 @@
         a: -Math.PI / 2, // angle (facing up)
         rotation: 0,
         thrust: { x: 0, y: 0 },
-        canShoot: true,
+        shootCooldown: 0,
         invulnerable: 120 // 2 seconds at 60fps
       };
     }
@@ -295,11 +291,13 @@
       }
       
       let speedMult = size === 3 ? 1 : (size === 2 ? 1.5 : 2.5);
+      let baseVelocity = speedMult * (wave * 0.2 + 1);
+      let dynamicVelocity = typeof getDynamicVelocity === 'function' ? getDynamicVelocity(baseVelocity) : baseVelocity;
       
       asteroids.push({
         x: x, y: y,
-        xv: (Math.random() - 0.5) * speedMult * (wave * 0.2 + 1),
-        yv: (Math.random() - 0.5) * speedMult * (wave * 0.2 + 1),
+        xv: (Math.random() - 0.5) * dynamicVelocity,
+        yv: (Math.random() - 0.5) * dynamicVelocity,
         r: size * 15,
         a: Math.random() * Math.PI * 2,
         vert: vert,
@@ -309,7 +307,7 @@
     }
 
     function shoot() {
-      if (ship.canShoot && bullets.length < 5) {
+      if (ship.shootCooldown <= 0 && bullets.length < 5) {
         bullets.push({
           x: ship.x + Math.cos(ship.a) * ship.r,
           y: ship.y + Math.sin(ship.a) * ship.r,
@@ -317,7 +315,7 @@
           yv: Math.sin(ship.a) * 8,
           life: 60 // frames
         });
-        ship.canShoot = false;
+        ship.shootCooldown = 15; // 4 shots per second (at 60 FPS)
       }
     }
 
@@ -373,7 +371,8 @@
       ship.x += ship.thrust.x;
       ship.y += ship.thrust.y;
 
-      // Shoot
+      // Shoot Cooldown & Auto-fire
+      if (ship.shootCooldown > 0) ship.shootCooldown--;
       if (keys.space) shoot();
       
       if (ship.invulnerable > 0) ship.invulnerable--;
