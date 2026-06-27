@@ -176,6 +176,7 @@
             requestAnimationFrame(loop);
         }
         canvas.addEventListener('click', () => { if(!isOver) velocity = jumpForce; });
+        canvas.addEventListener('touchstart', (e) => { e.preventDefault(); if(!isOver) velocity = jumpForce; }, {passive: false});
         window.addEventListener('keydown', (e) => { if(e.code === 'Space' && !isOver) { velocity = jumpForce; e.preventDefault(); } });
         restartBtn.addEventListener('click', () => { init(); loop(); });
         init(); loop();
