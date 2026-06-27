@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -108,12 +108,12 @@
     <!-- Mobile Controls -->
     <div class="w-full grid grid-cols-2 gap-4 md:hidden opacity-70">
       <div class="flex justify-start gap-2">
-        <button id="btnLeft" class="bg-nexus-card border border-white/10 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-white/20">†º</button>
-        <button id="btnRight" class="bg-nexus-card border border-white/10 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-white/20">†»</button>
+        <button id="btnLeft" class="bg-nexus-card border border-white/10 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-white/20">&larr;</button>
+        <button id="btnRight" class="bg-nexus-card border border-white/10 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-white/20">&rarr;</button>
       </div>
       <div class="flex justify-end gap-2">
-        <button id="btnThrust" class="bg-nexus-card border border-white/10 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-white/20"></button>
-        <button id="btnFire" class="bg-cyan-500/20 border border-cyan-500/50 text-cyan-400 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-cyan-500/40">”¥</button>
+        <button id="btnThrust" class="bg-nexus-card border border-white/10 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-white/20">&uarr;</button>
+        <button id="btnFire" class="bg-cyan-500/20 border border-cyan-500/50 text-cyan-400 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-cyan-500/40">&#9678;</button>
       </div>
     </div>
   </div>
@@ -189,8 +189,23 @@
     const bindBtn = (id, key) => {
       const btn = document.getElementById(id);
       if(!btn) return;
-      btn.addEventListener('touchstart', e => { e.preventDefault(); keys[key] = true; });
-      btn.addEventListener('touchend', e => { e.preventDefault(); keys[key] = false; if(key === 'space') ship.canShoot = true; });
+      btn.addEventListener('touchstart', e => { 
+        e.preventDefault(); keys[key] = true; 
+        if (key === 'space' && gameState === 'PLAYING') shoot();
+      });
+      btn.addEventListener('touchend', e => { 
+        e.preventDefault(); keys[key] = false; 
+        if(key === 'space') ship.canShoot = true; 
+      });
+      // Add mouse events for testing on desktop
+      btn.addEventListener('mousedown', e => { 
+        keys[key] = true; 
+        if (key === 'space' && gameState === 'PLAYING') shoot();
+      });
+      btn.addEventListener('mouseup', e => { 
+        keys[key] = false; 
+        if(key === 'space') ship.canShoot = true; 
+      });
     };
     bindBtn('btnLeft', 'left');
     bindBtn('btnRight', 'right');
@@ -237,8 +252,11 @@
     }
 
     document.getElementById('beginBtn').addEventListener('click', startGame);
+    document.getElementById('beginBtn').addEventListener('touchstart', (e) => { e.preventDefault(); startGame(); }, {passive: false});
     document.getElementById('restartBtn').addEventListener('click', init);
+    document.getElementById('restartBtn').addEventListener('touchstart', (e) => { e.preventDefault(); init(); }, {passive: false});
     document.getElementById('tryAgainBtn').addEventListener('click', init);
+    document.getElementById('tryAgainBtn').addEventListener('touchstart', (e) => { e.preventDefault(); init(); }, {passive: false});
 
     function resetShip() {
       ship = {
