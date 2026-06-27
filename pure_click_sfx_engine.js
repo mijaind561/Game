@@ -7,19 +7,18 @@ const gamesDir = path.join(rootDir, 'games');
 console.log("[ArcadeNexus Audio Architect]: Initiating Pure SFX Engine Extraction...");
 
 const pureEngine = `// --- NATIVE WEB AUDIO ENGINE ---
-        window.AudioContext = window.AudioContext || window.webkitAudioContext;
-        let audioCtx;
+        let audioCtx = null;
         let isMuted = false;
 
         function initAudioEngine() {
-            if(audioCtx) return;
-            audioCtx = new AudioContext();
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
 
         function playClickSound() {
-            if(!audioCtx || isMuted) return;
-            const clickOsc = audioCtx.createOscillator();
-            const clickGain = audioCtx.createGain();
+            if (isMuted || !audioCtx) return;
+            let clickOsc = audioCtx.createOscillator();
+            let clickGain = audioCtx.createGain();
             
             clickOsc.type = 'sine';
             clickOsc.frequency.setValueAtTime(440, audioCtx.currentTime);
@@ -30,8 +29,9 @@ const pureEngine = `// --- NATIVE WEB AUDIO ENGINE ---
             
             clickOsc.connect(clickGain);
             clickGain.connect(audioCtx.destination);
+            
             clickOsc.start();
-            clickOsc.stop(audioCtx.currentTime + 0.08);
+            clickOsc.stop(audioCtx.currentTime + 0.1);
         }
 
         const audioBtn = document.getElementById('audioToggleBtn');
@@ -46,7 +46,6 @@ const pureEngine = `// --- NATIVE WEB AUDIO ENGINE ---
             audioBtn.addEventListener('click', toggleAudio);
             audioBtn.addEventListener('touchstart', toggleAudio, {passive: false});
         }
-
         `;
 
 let processedCount = 0;
@@ -58,7 +57,7 @@ for (let i = 1; i <= 100; i++) {
         let original = content;
 
         const engineStartIdx = content.lastIndexOf('// --- NATIVE WEB AUDIO ENGINE ---');
-        const engineEndIdx = content.lastIndexOf('// Bind init and SFX to global user interactions');
+        const engineEndIdx = content.lastIndexOf('// Bind init and SFX');
 
         if (engineStartIdx !== -1 && engineEndIdx !== -1 && engineStartIdx < engineEndIdx) {
             content = content.substring(0, engineStartIdx) + pureEngine + content.substring(engineEndIdx);

@@ -211,33 +211,11 @@ window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown"
 
         // --- NATIVE WEB AUDIO ENGINE ---
         let audioCtx = null;
-        let bgmOsc = null;
-        let bgmGain = null;
         let isMuted = false;
 
         function initAudioEngine() {
             if (audioCtx) return;
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            
-            bgmOsc = audioCtx.createOscillator();
-            bgmGain = audioCtx.createGain();
-            
-            bgmOsc.type = 'triangle';
-            bgmGain.gain.value = isMuted ? 0 : 0.03;
-            
-            bgmOsc.connect(bgmGain);
-            bgmGain.connect(audioCtx.destination);
-            
-            bgmOsc.start();
-            
-            let freqs = [130.81, 146.83, 164.81, 196.00];
-            let fIdx = 0;
-            setInterval(() => {
-                if(audioCtx && bgmOsc) {
-                    bgmOsc.frequency.setValueAtTime(freqs[fIdx], audioCtx.currentTime);
-                    fIdx = (fIdx + 1) % freqs.length;
-                }
-            }, 600);
         }
 
         function playClickSound() {
@@ -266,7 +244,6 @@ window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown"
                 if(!audioCtx) initAudioEngine();
                 if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
                 isMuted = !isMuted;
-                if(bgmGain) bgmGain.gain.value = isMuted ? 0 : 0.03;
                 audioBtn.textContent = isMuted ? '🔇' : '🔊';
             };
             audioBtn.addEventListener('click', toggleAudio);
