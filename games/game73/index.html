@@ -157,7 +157,35 @@
     
 
 window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });
-</script>
+\n
+// Mobile Touch-to-Mouse Polyfill
+(function() {
+    function touchToMouse(e) {
+        if (e.target.tagName === 'CANVAS') {
+            e.preventDefault();
+        } else {
+            return;
+        }
+        let type = '';
+        if (e.type === 'touchstart') type = 'mousedown';
+        if (e.type === 'touchmove') type = 'mousemove';
+        if (e.type === 'touchend') type = 'mouseup';
+        if (!type) return;
+        
+        let touch = e.changedTouches[0];
+        let mouseEvent = new MouseEvent(type, {
+            clientX: touch ? touch.clientX : 0,
+            clientY: touch ? touch.clientY : 0,
+            bubbles: true,
+            cancelable: true
+        });
+        e.target.dispatchEvent(mouseEvent);
+    }
+    document.addEventListener('touchstart', touchToMouse, {passive: false});
+    document.addEventListener('touchmove', touchToMouse, {passive: false});
+    document.addEventListener('touchend', touchToMouse, {passive: false});
+})();
+\n</script>
 
     <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
         <h3 style="color: #fff; margin-top: 0;">How to Play Game Room 73</h3>
