@@ -64,9 +64,12 @@
     </div>
   </nav>
 
-  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4">
-<button id="audioToggleBtn" style="position: absolute; transform: translateX(340px); top: 20px; padding: 12px; background: #1e293b; color: #38bdf8; border: 2px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 20px; line-height: 1; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); transition: all 0.2s; z-index: 150;" title="Toggle Audio">🔊</button>
-<div class="game-container flex flex-col items-center">
+  <div class="flex flex-col lg:flex-row justify-center items-start w-full max-w-7xl mx-auto px-4"><div class="game-container flex flex-col items-center">
+<style>
+@media (max-width: 1024px) { #audioToggleBtn { position: relative !important; left: 0 !important; top: 0 !important; margin: 10px auto !important; display: flex !important; } }
+</style>
+<button id="audioToggleBtn" style="position: absolute; left: calc(50% + 250px); top: 10px; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); transition: all 0.2s; z-index: 200;" title="Toggle Audio">🔊</button>
+
     <div class="game-header w-full max-w-2xl">
       <div class="flex gap-6">
         <div>Score: <span id="scoreDisplay" class="font-bold text-orange-400">0</span></div>
@@ -81,10 +84,7 @@
           <div class="inline-block bg-black/80 backdrop-blur border border-white/20 px-6 py-2 rounded-full font-bold font-heading text-xl shadow-2xl">
              Catch only: <span id="targetType" class="text-orange-500 uppercase tracking-wider">FIRE VFX</span>
           </div>
-       </div>
-       
-       <button id="audioToggleBtn" style="position: absolute; right: -70px; top: 0px; padding: 12px; background: #1e293b; color: #38bdf8; border: 2px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 20px; line-height: 1; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); transition: all 0.2s; z-index: 100;" title="Toggle Audio">🔊</button>
-      <canvas id="gameCanvas_44" width="600" height="400" class="w-full bg-[#030712] rounded-lg shadow-2xl border-b-4 border-gray-600"></canvas>
+       </div><canvas id="gameCanvas_44" width="600" height="400" class="w-full bg-[#030712] rounded-lg shadow-2xl border-b-4 border-gray-600"></canvas>
     </div>
     
     <div class="text-center mt-3 text-gray-400 text-sm">
@@ -95,9 +95,7 @@
       <div class="game-over-panel bg-gray-900 border border-orange-600">
         <h2 class="text-3xl font-bold font-heading mb-2 text-orange-500">RENDER FAILED</h2>
         <p class="text-gray-400 mb-6">Final Composite Score: <span id="finalScore" class="text-orange-400 font-bold">0</span></p>
-        <button id="restartBtn" class="game-btn w-full bg-orange-600 hover:bg-orange-700">Try Again</button>
-        <button id="audioToggleBtn" style="display: inline-block; margin-left: 15px; padding: 12px; background: #1e293b; color: #38bdf8; border: 2px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 20px; line-height: 1; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); transition: all 0.2s; vertical-align: middle;">🔊</button>
-      </div>
+        <button id="restartBtn" class="game-btn w-full bg-orange-600 hover:bg-orange-700">Try Again</button></div>
     </div>
   </div>
 
@@ -107,10 +105,7 @@
           style="display:inline-block;width:160px;height:600px"
           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
           data-ad-slot="1111111111"></ins>
-     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-  
-    <button id="audioToggleBtn" style="position: relative; display: block; margin: 15px auto 0 auto; width: fit-content; padding: 10px 16px; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 18px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: all 0.2s;">🔊</button>
-      <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
+     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script><div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
         <h3 style="color: #fff; margin-top: 0;">Arcade Module 44 Operations Manual</h3>
         <p>Welcome to Arcade Room 44, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
     </div>
