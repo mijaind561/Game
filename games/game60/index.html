@@ -281,5 +281,14 @@ window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown"
         <h3 style="color: #fff; margin-top: 0;">How to Play Play Chess</h3>
         <p>Welcome to Play Chess, an elegant interactive board sandbox designed for strategic logic validation and layout testing right in your browser. This application draws an 8x8 alternating grid board that maps standard algebraic chess coordinates cleanly to the coordinate boundaries of the screen canvas. Users can interact with the system via clean mouse pointer events, enabling a smooth selection state machine that lets you freely reposition individual Unicode piece tokens across the board. Whether you are using this platform to test tactical board structures, analyze historic match openings, or practice end-game checkmate patterns, the engine operates completely locally with no database lag.</p>
     </div>
+
+<script>
+// Prevent Spacebar and Arrow keys from scrolling the page during gameplay
+window.addEventListener('keydown', function(e) {
+    if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+    }
+}, { passive: false });
+</script>
 </body>
 </html>

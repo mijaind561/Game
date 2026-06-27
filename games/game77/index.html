@@ -288,5 +288,14 @@ window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown"
         <h3 style="color: #fff; margin-top: 0;">How to Play Game Room 77</h3>
         <p>Welcome to Arcade Room 77, a premium browser module designed for instant gaming delivery. This interactive arcade viewport uses native engine loops to provide a responsive user experience on mobile and desktop layout configurations. Players use clean mouse and keyboard controls to navigate custom scenarios, track scoreboard metrics, and trigger win/fail state validations. Built using low-latency vanilla scripts and drawing contexts, this application runs at flat frame rates with zero plug-in steps. Dive into the mechanics to test your high scores and enjoy a refined browser gaming experience right here.</p>
     </div>
+
+<script>
+// Prevent Spacebar and Arrow keys from scrolling the page during gameplay
+window.addEventListener('keydown', function(e) {
+    if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+    }
+}, { passive: false });
+</script>
 </body>
 </html>

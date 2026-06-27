@@ -276,5 +276,14 @@ window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown"
         <h3 style="color: #fff; margin-top: 0;">How to Play 3D Car Run</h3>
         <p>Welcome to 3D Car Run, an impressive engineering showcase that replicates classic arcade scaling tricks using modern browser performance tools. The game uses a Mode-7 horizontal rendering layout to stretch line indices across the screen, creating a convincing illusion of depth and movement. As you steer along changing horizon lines, the system computes variable road offsets, testing your reaction times against sharp turns. This setup delivers retro racing aesthetics without needing heavy 3D engine downloads, keeping your experience lightweight, fast, and smooth on any device.</p>
     </div>
+
+<script>
+// Prevent Spacebar and Arrow keys from scrolling the page during gameplay
+window.addEventListener('keydown', function(e) {
+    if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+    }
+}, { passive: false });
+</script>
 </body>
 </html>

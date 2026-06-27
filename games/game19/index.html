@@ -580,5 +580,14 @@
             if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(e.code)) playClickSound();
         });
 </script>
+
+<script>
+// Prevent Spacebar and Arrow keys from scrolling the page during gameplay
+window.addEventListener('keydown', function(e) {
+    if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+    }
+}, { passive: false });
+</script>
 </body>
 </html>

@@ -281,5 +281,14 @@ window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown"
         <h3 style="color: #fff; margin-top: 0;">How to Play Draw Pixels</h3>
         <p>Welcome to Draw Pixels, a robust interactive design utility and creativity sandbox designed entirely on clean canvas matrix arrays. This browser interface turns the screen space into a functional pixel-art editing suite layout, giving users an interactive grid to paint on. By tracking mouse coordinates and event states, the engine updates values in a 2D color matrix on every click or drag move. This setup allows you to construct clean, retro game art without downloading bloated third-party design tools. The UI relies entirely on lightweight vanilla variables to calculate grid coordinates, keeping loading speeds lightning-fast and perfectly matching core performance metrics.</p>
     </div>
+
+<script>
+// Prevent Spacebar and Arrow keys from scrolling the page during gameplay
+window.addEventListener('keydown', function(e) {
+    if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+    }
+}, { passive: false });
+</script>
 </body>
 </html>

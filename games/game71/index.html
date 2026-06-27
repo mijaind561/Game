@@ -294,5 +294,14 @@ window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown"
         <h3 style="color: #fff; margin-top: 0;">How to Play Fruit Merge</h3>
         <p>Welcome to Fruit Merge, an addictive, highly optimized rigid-body spatial puzzle engine that combines physics simulations with engaging gameplay loops. Players drop round fruit tokens from an upper horizontal axis into a bounded canvas grid container. The engine runs precise Euclidean distance collision tests on every tick loop to check for overlapping fruit boundaries. When two elements of the exact same size tier collide, the script clears them out and drops an expanded tier sphere right at the midpoint coordinate. Mastering the game requires carefully managing your spatial layout and taking advantage of chain-reaction merges to prevent objects from stacking up past the game-over line.</p>
     </div>
+
+<script>
+// Prevent Spacebar and Arrow keys from scrolling the page during gameplay
+window.addEventListener('keydown', function(e) {
+    if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+    }
+}, { passive: false });
+</script>
 </body>
 </html>

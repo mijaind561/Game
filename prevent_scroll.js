@@ -1,25 +1,39 @@
 const fs = require('fs');
 const path = require('path');
 
-const gamesDir = path.join(__dirname, 'games');
-const preventScrollCode = `\nwindow.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });\n`;
+const rootDir = __dirname;
+const gamesDir = path.join(rootDir, 'games');
+
+console.log("[ArcadeNexus Input Engineer]: Initiating Scroll Prevention Sweep...");
+
+const preventScrollScript = `
+<script>
+// Prevent Spacebar and Arrow keys from scrolling the page during gameplay
+window.addEventListener('keydown', function(e) {
+    if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+    }
+}, { passive: false });
+</script>
+`;
+
+let processedCount = 0;
 
 for (let i = 1; i <= 100; i++) {
-    const fileLoc = path.join(gamesDir, 'game'+i, 'index.html');
+    const fileLoc = path.join(gamesDir, 'game' + i, 'index.html');
     if (fs.existsSync(fileLoc)) {
         let content = fs.readFileSync(fileLoc, 'utf8');
-        
-        // Prevent double injection
-        if (!content.includes('preventDefault()')) {
-            const scriptEnd = '</script>';
-            const endIdx = content.lastIndexOf(scriptEnd);
-            
-            if (endIdx !== -1) {
-                const newContent = content.substring(0, endIdx) + preventScrollCode + content.substring(endIdx);
-                fs.writeFileSync(fileLoc, newContent, 'utf8');
-                console.log("Injected scroll lock into game" + i);
-            }
+        let original = content;
+
+        if (!content.includes('Prevent Spacebar and Arrow keys from scrolling')) {
+            content = content.replace(/(<\/body>)/i, preventScrollScript + '$1');
+        }
+
+        if (content !== original) {
+            fs.writeFileSync(fileLoc, content, 'utf8');
+            processedCount++;
         }
     }
 }
-console.log("Global scroll lock applied to all games.");
+
+console.log('[PASS]: Spacebar and Arrow key scroll prevention injected into ' + processedCount + ' game matrices.');
