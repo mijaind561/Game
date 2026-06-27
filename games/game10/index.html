@@ -82,7 +82,7 @@
         <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex flex-col items-center">
           <span class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Lives</span>
           <div id="lives" class="text-xl font-bold text-green-400 font-heading leading-tight flex gap-1 pt-1">
-            <span class="text-xs">©©©</span>
+            <span class="text-xs">&hearts;&hearts;&hearts;</span>
           </div>
         </div>
       </div>
@@ -109,8 +109,8 @@
     <!-- Mobile Controls -->
     <div class="w-full grid grid-cols-2 gap-4 md:hidden opacity-70 px-4">
       <div class="flex justify-start gap-4">
-        <button id="btnLeft" class="bg-nexus-card border border-white/10 w-16 h-16 rounded-lg flex items-center justify-center text-3xl active:bg-white/20">—€</button>
-        <button id="btnRight" class="bg-nexus-card border border-white/10 w-16 h-16 rounded-lg flex items-center justify-center text-3xl active:bg-white/20">–¶</button>
+        <button id="btnLeft" class="bg-nexus-card border border-white/10 w-16 h-16 rounded-lg flex items-center justify-center text-3xl active:bg-white/20">&larr;</button>
+        <button id="btnRight" class="bg-nexus-card border border-white/10 w-16 h-16 rounded-lg flex items-center justify-center text-3xl active:bg-white/20">&rarr;</button>
       </div>
       <div class="flex justify-end">
         <button id="btnFire" class="bg-green-500/20 border border-green-500/50 text-green-400 w-full h-16 rounded-lg flex items-center justify-center text-xl font-bold tracking-widest active:bg-green-500/40">FIRE</button>
@@ -195,10 +195,16 @@
     const bindBtn = (id, key) => {
       const btn = document.getElementById(id);
       if(!btn) return;
-      btn.addEventListener('touchstart', e => { e.preventDefault(); keys[key] = true; });
+      btn.addEventListener('touchstart', e => { 
+        e.preventDefault(); keys[key] = true; 
+        if (key === 'space' && gameState === 'PLAYING' && bullets.length === 0) bullets.push({ x: player.x, y: player.y - 10, w: 2, h: 8, speed: -6 });
+      });
       btn.addEventListener('touchend', e => { e.preventDefault(); keys[key] = false; });
       // Add mouse events for testing on desktop
-      btn.addEventListener('mousedown', e => { keys[key] = true; });
+      btn.addEventListener('mousedown', e => { 
+        keys[key] = true; 
+        if (key === 'space' && gameState === 'PLAYING' && bullets.length === 0) bullets.push({ x: player.x, y: player.y - 10, w: 2, h: 8, speed: -6 });
+      });
       btn.addEventListener('mouseup', e => { keys[key] = false; });
     };
     bindBtn('btnLeft', 'left');
@@ -207,7 +213,7 @@
 
     function updateLivesUI() {
       let str = '';
-      for(let i=0; i<lives; i++) str += '©';
+      for(let i=0; i<lives; i++) str += '&hearts;';
       livesEl.innerHTML = `<span class="text-xs">${str}</span>`;
     }
 
@@ -286,8 +292,11 @@
     }
 
     document.getElementById('beginBtn').addEventListener('click', startGame);
+    document.getElementById('beginBtn').addEventListener('touchstart', (e) => { e.preventDefault(); startGame(); }, {passive: false});
     document.getElementById('restartBtn').addEventListener('click', init);
+    document.getElementById('restartBtn').addEventListener('touchstart', (e) => { e.preventDefault(); init(); }, {passive: false});
     document.getElementById('tryAgainBtn').addEventListener('click', init);
+    document.getElementById('tryAgainBtn').addEventListener('touchstart', (e) => { e.preventDefault(); init(); }, {passive: false});
 
     function update() {
       if (gameState !== 'PLAYING') return;

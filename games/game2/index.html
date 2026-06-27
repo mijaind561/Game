@@ -75,7 +75,7 @@
     <div class="game-header w-full flex flex-wrap justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-4 shadow-lg gap-4">
       <div class="flex gap-4 items-center">
         <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex items-center gap-2">
-          <span class="text-red-500 text-lg">š©</span>
+          <span class="text-red-500 text-lg">š&hearts;</span>
           <div id="mineCount" class="text-xl font-bold text-white font-heading w-8 text-center">40</div>
         </div>
         <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex items-center gap-2">
@@ -457,7 +457,7 @@
             if (cell.isFlagged) {
               ctx.fillStyle = '#ef4444';
               ctx.font = '14px sans-serif';
-              ctx.fillText('š©', x + CELL_SIZE/2, y + CELL_SIZE/2 + 1);
+              ctx.fillText('š&hearts;', x + CELL_SIZE/2, y + CELL_SIZE/2 + 1);
             }
           }
         }

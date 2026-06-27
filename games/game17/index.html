@@ -114,10 +114,10 @@
     
     <!-- Mobile Controls -->
     <div class="w-full flex justify-between gap-2 px-2 md:hidden">
-      <button id="btnLeft" class="flex-1 bg-nexus-card border border-white/10 h-16 rounded-lg flex items-center justify-center text-3xl text-pink-500 active:bg-white/20">—€</button>
+      <button id="btnLeft" class="flex-1 bg-nexus-card border border-white/10 h-16 rounded-lg flex items-center justify-center text-3xl text-pink-500 active:bg-white/20">&larr;</button>
       <button id="btnDown" class="flex-1 bg-nexus-card border border-white/10 h-16 rounded-lg flex items-center justify-center text-3xl text-cyan-400 active:bg-white/20">–¼</button>
       <button id="btnUp" class="flex-1 bg-nexus-card border border-white/10 h-16 rounded-lg flex items-center justify-center text-3xl text-green-400 active:bg-white/20">–²</button>
-      <button id="btnRight" class="flex-1 bg-nexus-card border border-white/10 h-16 rounded-lg flex items-center justify-center text-3xl text-purple-500 active:bg-white/20">–¶</button>
+      <button id="btnRight" class="flex-1 bg-nexus-card border border-white/10 h-16 rounded-lg flex items-center justify-center text-3xl text-purple-500 active:bg-white/20">&rarr;</button>
     </div>
   </div>
 
@@ -165,10 +165,10 @@
     canvas.height = 500;
 
     const DIRS = [
-      { id: 0, key: 'ArrowLeft', color: '#ec4899', symbol: '—€' }, // Pink
+      { id: 0, key: 'ArrowLeft', color: '#ec4899', symbol: '&larr;' }, // Pink
       { id: 1, key: 'ArrowDown', color: '#22d3ee', symbol: '–¼' }, // Cyan
       { id: 2, key: 'ArrowUp', color: '#4ade80', symbol: '–²' }, // Green
-      { id: 3, key: 'ArrowRight', color: '#a855f7', symbol: '–¶' } // Purple
+      { id: 3, key: 'ArrowRight', color: '#a855f7', symbol: '&rarr;' } // Purple
     ];
 
     let state = 'START';
@@ -344,9 +344,9 @@
       
       // Draw standard arrow shape
       ctx.beginPath();
-      if (dirStr === '–¶') {
+      if (dirStr === '&rarr;') {
         ctx.moveTo(-size/2, -size/2); ctx.lineTo(size/2, 0); ctx.lineTo(-size/2, size/2);
-      } else if (dirStr === '—€') {
+      } else if (dirStr === '&larr;') {
         ctx.moveTo(size/2, -size/2); ctx.lineTo(-size/2, 0); ctx.lineTo(size/2, size/2);
       } else if (dirStr === '–²') {
         ctx.moveTo(-size/2, size/2); ctx.lineTo(0, -size/2); ctx.lineTo(size/2, size/2);
