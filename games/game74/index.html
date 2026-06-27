@@ -118,17 +118,17 @@
   </div>
 
   <script>
-
         // --- JO JO RUN VECTOR CONSTRAINT GRAPPLING ENGINE ---
         const canvas = document.getElementById('gameCanvas_74');
         const ctx = canvas.getContext('2d');
         const restartBtn = document.getElementById('restartBtn') || { addEventListener: () => {} };
 
         let px, py, vx, vy, score, isOver, anchors, activeAnchor;
-        const gravity = 0.154;
+        let hasStarted = false; // Core State Gate
+        const gravity = 0.22;
 
         function init() {
-            px = 100; py = 200; vx = 3; vy = 0; score = 0; isOver = false; activeAnchor = null;
+            px = 100; py = 200; vx = 3; vy = 0; score = 0; isOver = false; activeAnchor = null; hasStarted = false;
             anchors = [{x: 250, y: 100}, {x: 450, y: 80}, {x: 650, y: 110}, {x: 850, y: 90}];
             updateScore();
         }
@@ -137,10 +137,23 @@
             scoreNode.textContent = score;
         }
         function loop() {
+            if (!hasStarted) {
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                anchors.forEach(a => { ctx.fillStyle='#e2e8f0'; ctx.beginPath(); ctx.arc(a.x, a.y, 8, 0, Math.PI*2); ctx.fill(); });
+                ctx.fillStyle = '#a855f7'; ctx.fillRect(px - 12, py - 12, 24, 24);
+                
+                // Interstitial Ready Menu Text
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.75)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 28px sans-serif'; ctx.textAlign = 'center';
+                ctx.fillText('JO JO RUN', canvas.width/2, canvas.height/2 - 20);
+                ctx.fillStyle = '#ffffff'; ctx.font = '16px sans-serif';
+                ctx.fillText('TAP / CLICK SCREEN TO SWING FORWARD', canvas.width/2, canvas.height/2 + 15);
+                requestAnimationFrame(loop);
+                return;
+            }
             if (isOver) { ctx.fillStyle='rgba(15,23,42,0.85)'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#f43f5e'; ctx.font='bold 32px sans-serif'; ctx.textAlign='center'; ctx.fillText('CRASH GAME OVER', canvas.width/2, canvas.height/2); return; }
-            ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Physics Constraint Application
             if (activeAnchor) {
                 let dx = px - activeAnchor.x, dy = py - activeAnchor.y;
                 let dist = Math.hypot(dx, dy);
@@ -152,12 +165,8 @@
                 ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(activeAnchor.x, activeAnchor.y); ctx.lineTo(px, py); ctx.stroke();
             } else { vy += gravity; }
 
-            px += vx; py += vy; vx *= 0.995; // Drag Coefficient
-
-            // Infinite Scrolling World Matrix Generation
+            px += vx; py += vy; vx *= 0.995;
             if(px > canvas.width - 200) { px = 100; score += 5; updateScore(); anchors.forEach(a => a.x = Math.random()*500 + 200); }
-
-            // Draw Anchors & Player Node
             anchors.forEach(a => { ctx.fillStyle='#e2e8f0'; ctx.beginPath(); ctx.arc(a.x, a.y, 8, 0, Math.PI*2); ctx.fill(); });
             ctx.fillStyle = '#a855f7'; ctx.fillRect(px - 12, py - 12, 24, 24);
 
@@ -165,48 +174,19 @@
             requestAnimationFrame(loop);
         }
         canvas.addEventListener('mousedown', () => {
+            if (!hasStarted) { hasStarted = true; return; }
             let closest = null, minDist = 9999;
             anchors.forEach(a => { let d = Math.hypot(px - a.x, py - a.y); if(d < minDist) { minDist = d; closest = a; } });
             if(minDist < 250) activeAnchor = closest;
         });
         canvas.addEventListener('mouseup', () => activeAnchor = null);
-        restartBtn.addEventListener('click', () => { init(); loop(); });
+        restartBtn.addEventListener('click', () => { init(); });
         init(); loop();
-    
-
-window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });
-\n
-// Mobile Touch-to-Mouse Polyfill
-(function() {
-    function touchToMouse(e) {
-        if (e.target.tagName === 'CANVAS') {
-            e.preventDefault();
-        } else {
-            return;
-        }
-        let type = '';
-        if (e.type === 'touchstart') type = 'mousedown';
-        if (e.type === 'touchmove') type = 'mousemove';
-        if (e.type === 'touchend') type = 'mouseup';
-        if (!type) return;
-        
-        let touch = e.changedTouches[0];
-        let mouseEvent = new MouseEvent(type, {
-            clientX: touch ? touch.clientX : 0,
-            clientY: touch ? touch.clientY : 0,
-            bubbles: true,
-            cancelable: true
-        });
-        e.target.dispatchEvent(mouseEvent);
-    }
-    document.addEventListener('touchstart', touchToMouse, {passive: false});
-    document.addEventListener('touchmove', touchToMouse, {passive: false});
-    document.addEventListener('touchend', touchToMouse, {passive: false});
-})();
-\n</script>
+    </script>
 
     <div class="adsense-seo-block" style="max-width: 800px; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
         <h3 style="color: #fff; margin-top: 0;">How to Play Game Room 74</h3>
         <p>Welcome to Arcade Room 74, a premium browser module designed for instant gaming delivery. This interactive arcade viewport uses native engine loops to provide a responsive user experience on mobile and desktop layout configurations. Players use clean mouse and keyboard controls to navigate custom scenarios, track scoreboard metrics, and trigger win/fail state validations. Built using low-latency vanilla scripts and drawing contexts, this application runs at flat frame rates with zero plug-in steps. Dive into the mechanics to test your high scores and enjoy a refined browser gaming experience right here.</p>
-    </div>\n</body>
+    </div>
+</body>
 </html>

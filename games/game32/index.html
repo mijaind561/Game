@@ -348,7 +348,8 @@
     draw();
     // Don't auto-start immediately so user has time to orient
     statusText.textContent = "Press New Game to Start";
-  \n
+  
+
 // Mobile Touch-to-Mouse Polyfill
 (function() {
     function touchToMouse(e) {
@@ -376,6 +377,7 @@
     document.addEventListener('touchmove', touchToMouse, {passive: false});
     document.addEventListener('touchend', touchToMouse, {passive: false});
 })();
-\n</script>
+
+</script>
 </body>
 </html>

@@ -404,7 +404,8 @@
     init();
   
 window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) e.preventDefault(); });
-\n
+
+
 // Mobile Touch-to-Mouse Polyfill
 (function() {
     function touchToMouse(e) {
@@ -432,6 +433,7 @@ window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown"
     document.addEventListener('touchmove', touchToMouse, {passive: false});
     document.addEventListener('touchend', touchToMouse, {passive: false});
 })();
-\n</script>
+
+</script>
 </body>
 </html>
