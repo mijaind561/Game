@@ -249,6 +249,43 @@ window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown"
     </div>
 
 <script>
+
+        // --- FRAME-1 STATE CUSHION ---
+        if (typeof window.__cushionInjected === 'undefined') {
+            window.__cushionInjected = true;
+            let __hasStarted = false;
+            let __realRAF = window.requestAnimationFrame;
+            window.requestAnimationFrame = function(cb) {
+                if (!__hasStarted) {
+                    let c = document.querySelector('canvas');
+                    if (c) {
+                        let cx = c.getContext('2d');
+                        cx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+                        cx.fillRect(0, 0, c.width, c.height);
+                        cx.fillStyle = '#38bdf8';
+                        cx.font = 'bold 30px sans-serif';
+                        cx.textAlign = 'center';
+                        cx.fillText('TAP TO START', c.width/2, c.height/2);
+                    }
+                    let poller = function() {
+                        if (__hasStarted) {
+                            __realRAF(cb);
+                        } else {
+                            setTimeout(poller, 50);
+                        }
+                    };
+                    setTimeout(poller, 50);
+                    return;
+                }
+                return __realRAF(cb);
+            };
+            let startHandler = function() { __hasStarted = true; };
+            window.addEventListener('mousedown', startHandler);
+            window.addEventListener('keydown', startHandler);
+            window.addEventListener('touchstart', startHandler, {passive: true});
+        }
+        // -----------------------------
+
 // Prevent Spacebar and Arrow keys from scrolling the page during gameplay
 window.addEventListener('keydown', function(e) {
     if(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code) && e.target.tagName !== 'INPUT') {
