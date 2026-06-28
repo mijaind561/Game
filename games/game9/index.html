@@ -110,7 +110,7 @@
     </div>
 
     <!-- Mobile Controls -->
-    <div class="w-full grid grid-cols-2 gap-4 md:hidden opacity-70">
+    <div id="mobileControls" class="w-full grid grid-cols-2 gap-4 md:hidden opacity-70" style="display: none;">
       <div class="flex justify-start gap-2">
         <button id="btnLeft" class="bg-nexus-card border border-white/10 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-white/20">&larr;</button>
         <button id="btnRight" class="bg-nexus-card border border-white/10 w-14 h-14 rounded-full flex items-center justify-center text-2xl active:bg-white/20">&rarr;</button>
@@ -195,6 +195,7 @@ let dropCounter = 0;
 
 function startGame() {
   window.hasStarted = true;
+  if(document.getElementById('mobileControls')) document.getElementById('mobileControls').style.display = '';
   if(document.getElementById('startOverlay')) document.getElementById('startOverlay').style.display = 'none';
   if(document.getElementById('gameOver')) document.getElementById('gameOver').style.display = 'none';
   score = 0; isGameOver = false;
@@ -208,6 +209,7 @@ function startGame() {
 function gameLoop(time) {
   if (isGameOver) {
       if(document.getElementById('gameOver')) document.getElementById('gameOver').style.display = 'flex';
+      if(document.getElementById('mobileControls')) document.getElementById('mobileControls').style.display = 'none';
       return;
   }
   const dt = time - lastTime;
