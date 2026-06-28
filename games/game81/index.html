@@ -229,13 +229,21 @@ window.addEventListener("keydown", function(e) { if([" ", "ArrowUp", "ArrowDown"
         });
     }
 
+    let lastPhysicalKey = '';
+    proxy.addEventListener('keydown', e => {
+        if (e.isTrusted && e.key !== 'Unidentified' && e.keyCode !== 229) {
+            lastPhysicalKey = e.key;
+        }
+    });
+
     proxy.addEventListener('input', (e) => {
         let char = e.data;
         if (e.inputType === 'deleteContentBackward') char = 'Backspace';
         if (e.inputType === 'insertLineBreak') char = 'Enter';
-        if (char) {
+        if (char && char !== lastPhysicalKey) {
             window.dispatchEvent(new KeyboardEvent('keydown', { 'key': char }));
         }
+        lastPhysicalKey = '';
         proxy.value = ''; // clear buffer
     });
 })();
