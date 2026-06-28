@@ -153,10 +153,23 @@
                 proj.x += proj.vx; proj.y += proj.vy;
                 if(proj.x<20 || proj.x>canvas.width-20) proj.vx=-proj.vx;
                 let hit = false;
+                let hitIdx = -1;
                 for(let i=0; i<bubbles.length; i++) {
-                    if(Math.hypot(proj.x - bubbles[i].x, proj.y - bubbles[i].y) < 40) { hit = true; break; }
+                    if(Math.hypot(proj.x - bubbles[i].x, proj.y - bubbles[i].y) < 40) { hit = true; hitIdx = i; break; }
                 }
-                if(hit || proj.y<20) { bubbles.push({x: proj.x, y: proj.y, c: proj.c}); score+=10; updateScoreUI(score); newProj(); }
+                if(hit || proj.y<20) { 
+                    if (hit && bubbles[hitIdx].c === proj.c) {
+                        // Match found! Pop the target bubble.
+                        bubbles.splice(hitIdx, 1);
+                        score += 50;
+                    } else {
+                        // No match, add projectile to the pile.
+                        bubbles.push({x: proj.x, y: proj.y, c: proj.c}); 
+                    }
+                    score+=10; 
+                    updateScoreUI(score); 
+                    newProj(); 
+                }
             }
             ctx.fillStyle = proj.c; ctx.beginPath(); ctx.arc(proj.x, proj.y, 20, 0, Math.PI*2); ctx.fill();
             
