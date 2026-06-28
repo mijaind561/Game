@@ -156,6 +156,7 @@
             if(blocks[0].x - pos < -100) { blocks.shift(); spawnBlock(blocks[blocks.length-1].x/300 + 1); }
             
             ctx.fillStyle = colors[pColor]; ctx.beginPath(); ctx.arc(50, canvas.height/2 - 20, 20, 0, Math.PI*2); ctx.fill();
+            ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3; ctx.stroke();
             requestAnimationFrame(loop);
         }
         window.addEventListener('keydown', e => { if(e.key==='ArrowUp' || e.key===' ') pColor = (pColor+1)%3; });
