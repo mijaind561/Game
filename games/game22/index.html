@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -180,8 +180,8 @@
           let dir = (i % 2 === 0) ? 1 : -1;
           let speed = Math.random() * 1.5 + 1.0;
           let objs = [];
-          for(let j=0; j<3; j++) {
-            objs.push({ x: j*200 + Math.random()*50, y: i*GRID, w: GRID*2.5, h: GRID*0.8, speed: speed * dir, dir: dir });
+          for(let j=0; j<2; j++) {
+            objs.push({ x: j*280 + Math.random()*50, y: i*GRID, w: GRID*3.5, h: GRID*0.8, speed: speed * dir, dir: dir });
           }
           lanes.push({ type: 'river', speed: speed, objs: objs });
         }
@@ -190,8 +190,8 @@
           let dir = (i % 2 === 0) ? -1 : 1;
           let speed = Math.random() * 2 + 1.5;
           let objs = [];
-          for(let j=0; j<3; j++) {
-            objs.push({ x: j*180, y: i*GRID, w: GRID, h: GRID*0.8, speed: speed * dir, dir: dir });
+          for(let j=0; j<2; j++) {
+            objs.push({ x: j*260, y: i*GRID, w: GRID, h: GRID*0.8, speed: speed * dir, dir: dir });
           }
           lanes.push({ type: 'road', speed: speed, objs: objs });
         }
