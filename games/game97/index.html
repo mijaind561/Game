@@ -89,7 +89,7 @@
     </div>
 
     <p class="text-center text-gray-300 mt-2 font-medium text-lg px-4">
-      Use Arrow keys to navigate the node boundary traversal maze to the green goal.
+      Desktop: Arrow keys | Mobile: Swipe to navigate the node boundary traversal maze to the green goal.
     </p>
   </div>
 
@@ -162,6 +162,21 @@
             if(e.key==='ArrowUp') ny--; if(e.key==='ArrowDown') ny++; if(e.key==='ArrowLeft') nx--; if(e.key==='ArrowRight') nx++;
             if(maze[ny][nx]!==1) { px=nx; py=ny; score++; updateScoreUI(score); if(maze[ny][nx]===2) isOver=true; draw(); }
         });
+        let tsX = 0, tsY = 0;
+        canvas.addEventListener('touchstart', e => {
+            tsX = e.touches[0].clientX; tsY = e.touches[0].clientY; e.preventDefault();
+        }, {passive: false});
+        canvas.addEventListener('touchend', e => {
+            let teX = e.changedTouches[0].clientX, teY = e.changedTouches[0].clientY;
+            let dx = teX - tsX, dy = teY - tsY;
+            if(Math.abs(dx) < 20 && Math.abs(dy) < 20) return;
+            let nx=px, ny=py;
+            if(Math.abs(dx) > Math.abs(dy)) { if(dx > 0) nx++; else nx--; } 
+            else { if(dy > 0) ny++; else ny--; }
+            if(isOver) return;
+            if(maze[ny][nx]!==1) { px=nx; py=ny; score++; updateScoreUI(score); if(maze[ny][nx]===2) isOver=true; draw(); }
+            e.preventDefault();
+        }, {passive: false});
         restartBtn.addEventListener('click', init); init();
     
 

@@ -89,7 +89,7 @@
     </div>
 
     <p class="text-center text-gray-300 mt-2 font-medium text-lg px-4">
-      Tap or press Space/Up to cycle your color to match the platforms!
+      Desktop: Space/Up/Click | Mobile: Tap anywhere to cycle your color to match the platforms!
     </p>
   </div>
 
@@ -160,6 +160,11 @@
         }
         window.addEventListener('keydown', e => { if(e.key==='ArrowUp' || e.key===' ') pColor = (pColor+1)%3; });
         canvas.addEventListener('mousedown', () => { pColor = (pColor+1)%3; });
+        window.addEventListener('touchstart', (e) => {
+            if(e.target.tagName !== 'BUTTON' && e.target.id !== 'audioToggleBtn') {
+                pColor = (pColor+1)%3;
+            }
+        }, {passive: true});
         restartBtn.addEventListener('click', init); init();
     
 
