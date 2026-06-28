@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (bestNode && Number(score) > Number(bestNode.textContent)) bestNode.textContent = score;
     }
 
-        let score, isOver, term, match, options;
+        let score, isOver, term, match, options, hovered = -1;
         const pairs = [['Paris','France'],['Tokyo','Japan'],['Berlin','Germany'],['Rome','Italy'],['Madrid','Spain']];
         function init() { score=0; isOver=false; updateScoreUI(0); nextRound(); }
         function nextRound() {
@@ -165,17 +165,33 @@ document.addEventListener("DOMContentLoaded", () => {
         function draw() {
             ctx.fillStyle = '#0f172a'; ctx.fillRect(0,0,canvas.width,canvas.height);
             if(isOver) { ctx.fillStyle='#ef4444'; ctx.font='bold 36px sans-serif'; ctx.textAlign='center'; ctx.fillText('WRONG', canvas.width/2, canvas.height/2); return; }
-            ctx.fillStyle='#38bdf8'; ctx.font='24px sans-serif'; ctx.textAlign='center'; ctx.fillText("Match Capital to Country: " + term, canvas.width/2, 100);
+            ctx.fillStyle='#38bdf8'; ctx.font='bold 26px sans-serif'; ctx.textAlign='center'; ctx.fillText("Match Capital to Country: " + term, canvas.width/2, 90);
             for(let i=0; i<4; i++) {
-                ctx.fillStyle='#1e293b'; ctx.fillRect(canvas.width/2 - 200, 150 + i*60, 400, 45);
-                ctx.fillStyle='#fff'; ctx.font='18px sans-serif'; ctx.fillText(options[i], canvas.width/2, 178 + i*60);
+                ctx.fillStyle = (i === hovered) ? '#3b82f6' : '#1e293b'; 
+                if (ctx.roundRect) {
+                    ctx.beginPath(); ctx.roundRect(canvas.width/2 - 200, 130 + i*80, 400, 60, 10); ctx.fill();
+                } else {
+                    ctx.fillRect(canvas.width/2 - 200, 130 + i*80, 400, 60);
+                }
+                ctx.fillStyle = (i === hovered) ? '#ffffff' : '#cbd5e1'; 
+                ctx.font='bold 20px sans-serif'; ctx.fillText(options[i], canvas.width/2, 168 + i*80);
             }
         }
+        canvas.addEventListener('mousemove', e => {
+            if(isOver) return;
+            const r=canvas.getBoundingClientRect(); let y=(e.clientY-r.top)*(canvas.height/r.height);
+            let newHover = -1; for(let i=0; i<4; i++) if(y > 130+i*80 && y < 130+i*80+60) newHover=i;
+            if(hovered !== newHover) { hovered = newHover; canvas.style.cursor = hovered !== -1 ? 'pointer' : 'default'; draw(); }
+        });
         canvas.addEventListener('mousedown', e => {
             if(isOver) return;
             const r=canvas.getBoundingClientRect(); let y=(e.clientY-r.top)*(canvas.height/r.height);
-            let clicked = -1; for(let i=0; i<4; i++) if(y > 150+i*60 && y < 150+i*60+45) clicked=i;
-            if(clicked!==-1) { if(options[clicked]===match) { score+=10; updateScoreUI(score); nextRound(); } else { isOver=true; draw(); } }
+            let clicked = -1; for(let i=0; i<4; i++) if(y > 130+i*80 && y < 130+i*80+60) clicked=i;
+            if(clicked!==-1) { 
+                if(typeof playClickSound === 'function') playClickSound();
+                if(options[clicked]===match) { score+=10; updateScoreUI(score); nextRound(); } 
+                else { isOver=true; draw(); } 
+            }
         });
         restartBtn.addEventListener('click', init); init();
     
