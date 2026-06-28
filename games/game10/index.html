@@ -159,7 +159,9 @@ const keys = {left: false, right: false};
     let el = document.getElementById(id);
     if(el) {
         el.addEventListener('touchstart', e => { e.preventDefault(); if(id==='btnLeft') keys.left=true; if(id==='btnRight') keys.right=true; });
-        el.addEventListener('touchend', e => { e.preventDefault(); if(id==='btnLeft') keys.left=false; if(id==='btnRight') keys.right=false; });
+        const stop = (e) => { e.preventDefault(); if(id==='btnLeft') keys.left=false; if(id==='btnRight') keys.right=false; };
+        el.addEventListener('touchend', stop);
+        el.addEventListener('touchcancel', stop);
     }
 });
 window.addEventListener('keydown', e => { 

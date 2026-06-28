@@ -163,8 +163,22 @@ const keys = {left: false, right: false, down: false};
 ['btnLeft', 'btnRight', 'btnDown'].forEach(id => {
     let el = document.getElementById(id);
     if(el) {
-        el.addEventListener('touchstart', e => { e.preventDefault(); if(id==='btnLeft') keys.left=true; if(id==='btnRight') keys.right=true; if(id==='btnDown') keys.down=true; });
-        el.addEventListener('touchend', e => { e.preventDefault(); if(id==='btnLeft') keys.left=false; if(id==='btnRight') keys.right=false; if(id==='btnDown') keys.down=false; });
+        let interval = null;
+        const triggerMove = () => {
+            if (isGameOver) return;
+            if(id==='btnLeft') { piece.x = Math.max(0, piece.x-1); }
+            if(id==='btnRight') { piece.x = Math.min(cols-1, piece.x+1); }
+            if(id==='btnDown') { piece.y = Math.min(rows-1, piece.y+1); }
+        };
+        el.addEventListener('touchstart', e => { 
+            e.preventDefault(); 
+            triggerMove(); 
+            if(interval) clearInterval(interval);
+            interval = setInterval(triggerMove, 150); 
+        });
+        const stop = (e) => { e.preventDefault(); if(interval) clearInterval(interval); interval = null; };
+        el.addEventListener('touchend', stop);
+        el.addEventListener('touchcancel', stop);
     }
 });
 window.addEventListener('keydown', e => {
