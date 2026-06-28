@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -79,11 +79,11 @@
     <div class="game-header w-full flex flex-wrap justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-4 shadow-lg gap-4">
       <div class="flex gap-4 items-center">
         <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex items-center gap-2">
-          <span class="text-red-500 text-lg">š&hearts;</span>
+          <span class="text-red-500 text-lg">💣</span>
           <div id="mineCount" class="text-xl font-bold text-white font-heading w-8 text-center">40</div>
         </div>
         <div class="bg-nexus-dark px-3 py-1.5 rounded-lg border border-white/5 flex items-center gap-2">
-          <span class="text-cyan-400 text-lg">±¸</span>
+          <span class="text-cyan-400 text-lg">⏳</span>
           <div id="timer" class="text-xl font-bold text-white font-heading w-12 text-center">000</div>
         </div>
       </div>
@@ -94,7 +94,7 @@
           <option value="medium" selected>Med (16x16)</option>
           <option value="hard">Hard (24x20)</option>
         </select>
-        <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-3 py-1.5 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">˜Š Restart</button></div>
+        <button id="restartBtn" class="bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 text-white px-3 py-1.5 rounded-lg font-bold text-sm shadow-md transition-transform active:scale-95">🔄 Restart</button></div>
     </div>
 
     <div class="text-xs text-gray-400 mb-2 w-full text-center">Desktop: Left/Right click | Mobile: Tap to reveal, Long-press to flag</div>
@@ -209,7 +209,7 @@
       
       mineCountEl.textContent = MINES;
       timerEl.textContent = '000';
-      restartBtn.innerHTML = '˜Š Restart';
+      restartBtn.innerHTML = '🔄 Restart';
       
       gameOverOverlay.style.opacity = '0';
       gameOverOverlay.style.pointerEvents = 'none';
