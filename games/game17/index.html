@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -12,7 +12,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Rhythm Arrows &mdash; GamiDay</title>
-  <meta name="description" content="Hit the arrows on the beat in this DDR-style rhythm arcade game.">
+  <meta name="description" content="Hit the arrows on the beat in this DDR-style rhythm GamiDay game.">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
 
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <style>
 @media (max-width: 1024px) { #audioToggleBtn { position: relative !important; left: 0 !important; top: 0 !important; margin: 10px auto !important; display: flex !important; } }
 </style>
-<button id="audioToggleBtn" style="position: absolute; left: calc(50% + 250px); top: 10px; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); transition: all 0.2s; z-index: 200;" title="Toggle Audio">ðŸ”Š</button>
+<button id="audioToggleBtn" style="position: absolute; left: calc(50% + 250px); top: 10px; width: 38px; height: 38px; padding: 0; display: flex; align-items: center; justify-content: center; background: #1e293b; color: #38bdf8; border: 1px solid #38bdf8; border-radius: 50%; cursor: pointer; font-size: 15px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); transition: all 0.2s; z-index: 200;" title="Toggle Audio">??</button>
 
     
     <div class="game-header w-full flex justify-between items-center bg-nexus-card p-4 rounded-xl border border-white/10 mb-4 shadow-lg gap-4">
@@ -149,14 +149,14 @@ document.addEventListener("DOMContentLoaded", () => {
     <!-- Mobile Controls -->
     <div class="w-full flex justify-between gap-2 px-2 md:hidden">
       <button id="btnLeft" class="flex-1 bg-nexus-card border border-white/10 h-16 rounded-lg flex items-center justify-center text-3xl text-pink-500 active:bg-white/20">&larr;</button>
-      <button id="btnDown" class="flex-1 bg-nexus-card border border-white/10 h-16 rounded-lg flex items-center justify-center text-3xl text-cyan-400 active:bg-white/20">â€“Â¼</button>
-      <button id="btnUp" class="flex-1 bg-nexus-card border border-white/10 h-16 rounded-lg flex items-center justify-center text-3xl text-green-400 active:bg-white/20">â€“Â²</button>
+      <button id="btnDown" class="flex-1 bg-nexus-card border border-white/10 h-16 rounded-lg flex items-center justify-center text-3xl text-cyan-400 active:bg-white/20">–¼</button>
+      <button id="btnUp" class="flex-1 bg-nexus-card border border-white/10 h-16 rounded-lg flex items-center justify-center text-3xl text-green-400 active:bg-white/20">–²</button>
       <button id="btnRight" class="flex-1 bg-nexus-card border border-white/10 h-16 rounded-lg flex items-center justify-center text-3xl text-purple-500 active:bg-white/20">&rarr;</button>
     </div>
   
 <div class="adsense-seo-block" style="width: 100%; margin: 30px auto; padding: 20px; background: #1e293b; color: #cbd5e1; font-family: sans-serif; line-height: 1.6; border-radius: 8px;">
-        <h3 style="color: #fff; margin-top: 0;">Arcade Module 17 Operations Manual</h3>
-        <p>Welcome to Arcade Room 17, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
+        <h3 style="color: #fff; margin-top: 0;">GamiDay Module 17 Operations Manual</h3>
+        <p>Welcome to GamiDay Room 17, an optimized HTML5 browser utility designed for responsive, zero-delay gameplay execution across all modern screen orientations. This gameplay viewport relies on low-latency vanilla JavaScript engines that run at a smooth, constant 60 FPS. The engine incorporates a unified progressive difficulty multiplier matrix, allowing new players to enjoy a highly forgiving entry-level speed that scales up dynamically as your score increments. Clicks and keyboard inputs map perfectly onto our custom canvas coordinate boundaries. Use the integrated restart system to immediately flush memory arrays, reset scoring states, and challenge your historical high score tracking matrices here.</p>
     </div>
 
 <div class="w-full mb-8 mt-4">
@@ -204,8 +204,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const DIRS = [
       { id: 0, key: 'ArrowLeft', color: '#ec4899', symbol: '&larr;' }, // Pink
-      { id: 1, key: 'ArrowDown', color: '#22d3ee', symbol: 'â€“Â¼' }, // Cyan
-      { id: 2, key: 'ArrowUp', color: '#4ade80', symbol: 'â€“Â²' }, // Green
+      { id: 1, key: 'ArrowDown', color: '#22d3ee', symbol: '–¼' }, // Cyan
+      { id: 2, key: 'ArrowUp', color: '#4ade80', symbol: '–²' }, // Green
       { id: 3, key: 'ArrowRight', color: '#a855f7', symbol: '&rarr;' } // Purple
     ];
 
@@ -386,9 +386,9 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.moveTo(-size/2, -size/2); ctx.lineTo(size/2, 0); ctx.lineTo(-size/2, size/2);
       } else if (dirStr === '&larr;') {
         ctx.moveTo(size/2, -size/2); ctx.lineTo(-size/2, 0); ctx.lineTo(size/2, size/2);
-      } else if (dirStr === 'â€“Â²') {
+      } else if (dirStr === '–²') {
         ctx.moveTo(-size/2, size/2); ctx.lineTo(0, -size/2); ctx.lineTo(size/2, size/2);
-      } else if (dirStr === 'â€“Â¼') {
+      } else if (dirStr === '–¼') {
         ctx.moveTo(-size/2, -size/2); ctx.lineTo(0, size/2); ctx.lineTo(size/2, -size/2);
       }
       ctx.closePath();
@@ -535,7 +535,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if(!audioCtx) initAudioEngine();
                 if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
                 isMuted = !isMuted;
-                audioBtn.textContent = isMuted ? 'ðŸ”‡' : 'ðŸ”Š';
+                audioBtn.textContent = isMuted ? '??' : '??';
             };
             audioBtn.addEventListener('click', toggleAudio);
                         /* removed conflicting touchstart */
