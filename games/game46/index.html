@@ -317,6 +317,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if(input.down) {
             car.speed -= car.accel * dt;
+            if(car.speed < 0) car.speed = 0;
             moving = true;
         }
         
