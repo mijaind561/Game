@@ -135,7 +135,7 @@ const CATEGORIES = [
 ];
 
 // Featured game IDs for the hero carousel
-const FEATURED_IDS = [23, 96, 46, 71, 16, 74];
+const FEATURED_IDS = [23, 50, 46, 71, 16, 74];
 
 /* ---- Initialise on DOM ready ---- */
 document.addEventListener('DOMContentLoaded', () => {
